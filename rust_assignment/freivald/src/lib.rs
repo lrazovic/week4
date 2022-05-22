@@ -1,6 +1,5 @@
 use ark_bls12_381::Fq as F;
 use ark_std::rand::random;
-use ndarray::parallel::prelude::*;
 use ndarray::{Array1, Array2};
 
 pub struct Freivald {
@@ -24,8 +23,12 @@ impl Freivald {
     }
 
     fn random_vector(n: usize) -> Array1<F> {
+        let mut r = random();
         let mut a = Array1::<F>::zeros(n);
-        a.par_iter_mut().for_each(|x| *x = random());
+        a.iter_mut().for_each(|x| {
+            *x = r;
+            r *= r
+        });
         a
     }
 
@@ -113,8 +116,12 @@ mod tests {
     }
 
     fn random_matrix(n: usize) -> Array2<F> {
+        let mut r = random();
         let mut a = Array2::<F>::zeros((n, n));
-        a.par_iter_mut().for_each(|x| *x = random());
+        a.iter_mut().for_each(|x| {
+            *x = r;
+            r *= r
+        });
         a
     }
 
